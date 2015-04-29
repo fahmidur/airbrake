@@ -46,7 +46,7 @@ module Airbrake
     # Sends the notice data off to Airbrake for processing.
     #
     # @param [Notice or String] notice The notice to be sent off
-    def send_to_airbrake(notice)
+    def send_to_airbrake(notice, attempts=0)
       data = prepare_notice(notice)
       http = setup_http_connection
 
@@ -65,6 +65,14 @@ module Airbrake
         log :level => :info,
             :message => "Success: #{response.class}",
             :response => response
+      when Net::HTTPRequestEntityTooLarge && attempts < 1
+        log :level => :info,
+            :message => "Failure: #{response.class}. Truncating and Trying Again",
+            :response => response
+
+        notice.backtrace.lines = notice.backtrace.lines[0..10] # Limit to 10 lines
+        notice.error_message = notice.error_message[0..255]
+        send_to_airbrake(notice, attempts+=1)
       else
         log :level => :error,
             :message => "Failure: #{response.class}",
