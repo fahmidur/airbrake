@@ -27,7 +27,7 @@ module Airbrake
     attr_reader :api_key
 
     # The backtrace from the given exception or hash.
-    attr_reader :backtrace
+    attr_accessor :backtrace
 
     # The name of the class of error (such as RuntimeError)
     attr_reader :error_class
@@ -39,7 +39,7 @@ module Airbrake
     attr_reader :cgi_data
 
     # The message from the exception, or a general description of the error
-    attr_reader :error_message
+    attr_accessor :error_message
 
     # See Configuration#backtrace_filters
     attr_reader :backtrace_filters

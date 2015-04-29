@@ -46,7 +46,7 @@ module Airbrake
     end
 
     # holder for an Array of Backtrace::Line instances
-    attr_reader :lines
+    attr_accessor :lines
 
     def self.parse(ruby_backtrace, opts = {})
       ruby_lines = split_multiline_backtrace(ruby_backtrace)
